@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="RestaurantAuth.API/RestaurantAuth.API.csproj" />
+  <Project Path="RestaurantAuth.Application/RestaurantAuth.Application.csproj" />
+  <Project Path="RestaurantAuth.Domain/RestaurantAuth.Domain.csproj" />
+  <Project Path="RestaurantAuth.Infrastructure/RestaurantAuth.Infrastructure.csproj" />
+</Solution>
