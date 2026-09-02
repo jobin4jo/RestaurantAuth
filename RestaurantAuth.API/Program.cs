@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using RestaurantAuth.Application.Repositories;
+using RestaurantAuth.Application.Service;
 using RestaurantAuth.Infrastructure;
-
+using RestaurantAuth.Infrastructure.IService;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -14,6 +16,9 @@ builder.Services.AddDbContext<RestaurantDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();  
+builder.Services.AddScoped<IServiceRepo,ServiceRepo>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
