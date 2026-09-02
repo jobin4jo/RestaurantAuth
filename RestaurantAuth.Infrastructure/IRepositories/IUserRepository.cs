@@ -1,4 +1,5 @@
 ﻿using RestaurantAuth.Domain;
+using RestaurantAuth.Domain.DTO.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,6 @@ namespace RestaurantAuth.Infrastructure;
 public interface IUserRepository
 {
    Task<List<User>>GetAllUsers();
-    Task<User> RegisterUser(RegisterationRequestDTO request);
+    Task<RegisterationResponseDTO> RegisterUser(RegisterationRequestDTO request);
+    Task<LoginResponseDTO> LoginUser(LoginRequestDTO request);
 }

@@ -1,6 +1,7 @@
-﻿using RestaurantAuth.Infrastructure;
+﻿using Microsoft.EntityFrameworkCore;
+using RestaurantAuth.Domain;
+using RestaurantAuth.Infrastructure;
 using RestaurantAuth.Infrastructure.IService;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,11 @@ namespace RestaurantAuth.Application.Service
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
             return user != null ? true : false;
+        }
+        public async Task<User> GetUserDetailByEmail(string email)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            return user;
         }
     }
 }
