@@ -1,4 +1,4 @@
-﻿using RestaurantAuth.Domain;
+using RestaurantAuth.Domain;
 using RestaurantAuth.Domain.DTO.User;
 using System;
 using System.Collections.Generic;
@@ -13,4 +13,6 @@ public interface IUserRepository
    Task<List<User>>GetAllUsers();
     Task<RegisterationResponseDTO> RegisterUser(RegisterationRequestDTO request);
     Task<LoginResponseDTO> LoginUser(LoginRequestDTO request);
+    Task<LoginResponseDTO> RefreshToken(RefreshTokenRequestDTO request);
+    Task<bool> LogoutUser(LogoutRequestDTO request);
 }

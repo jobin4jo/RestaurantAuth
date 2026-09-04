@@ -8,10 +8,10 @@ namespace RestaurantAuth.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class AuthController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
-        public UserController(IUserRepository userRepository)
+        public AuthController(IUserRepository userRepository)
         {
             _userRepository= userRepository;
         }
@@ -97,5 +97,87 @@ namespace RestaurantAuth.API.Controllers
                 });
             }
         }
+
+        [HttpPost("RefreshToken")]
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequestDTO request)
+        {
+            try
+            {
+                var response = await _userRepository.RefreshToken(request);
+
+                return Ok(new
+                {
+                    success = true,
+                    message = "Token refreshed successfully.",
+                    data = response
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = ex.Message
+                });
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new
+                {
+                    success = false,
+                    message = ex.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    success = false,
+                    message = "An unexpected error occurred.",
+                    error = ex.InnerException != null ? ex.InnerException.Message : ex.Message
+                });
+            }
+        }
+
+        [HttpPost("Logout")]
+        public async Task<IActionResult> Logout([FromBody] LogoutRequestDTO request)
+        {
+            try
+            {
+                var result = await _userRepository.LogoutUser(request);
+
+                return Ok(new
+                {
+                    success = true,
+                    message = "Logout successful. Refresh token revoked."
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = ex.Message
+                });
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new
+                {
+                    success = false,
+                    message = ex.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    success = false,
+                    message = "An unexpected error occurred.",
+                    error = ex.InnerException != null ? ex.InnerException.Message : ex.Message
+                });
+            }
+        }
     }
 }
+
