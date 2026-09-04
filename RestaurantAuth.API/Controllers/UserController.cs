@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantAuth.Infrastructure;
 using RestaurantAuth.Domain;
+using RestaurantAuth.Domain.DTO.User;
 
 namespace RestaurantAuth.API.Controllers
 {
@@ -52,6 +53,47 @@ namespace RestaurantAuth.API.Controllers
                     success = false,
                     message = "An unexpected error occurred.",
                     error = ex.Message
+                });
+            }
+        }
+
+        [HttpPost("Login")]
+        public async Task<IActionResult> LoginUser([FromBody] LoginRequestDTO request)
+        {
+            try
+            {
+                var response = await _userRepository.LoginUser(request);
+
+                return Ok(new
+                {
+                    success = true,
+                    message = "Login successful.",
+                    data = response
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = ex.Message
+                });
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new
+                {
+                    success = false,
+                    message = ex.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    success = false,
+                    message = "An unexpected error occurred.",
+                    error = ex.InnerException != null ? ex.InnerException.Message : ex.Message
                 });
             }
         }

@@ -1,11 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace RestaurantAuth.Domain;
 
+[Table("RefreshToken")]
 public class RefreshToken
 {
     public int Id { get; set; }

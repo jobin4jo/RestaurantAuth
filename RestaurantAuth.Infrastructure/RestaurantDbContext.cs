@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using RestaurantAuth.Domain;
 using System;
 using System.Collections.Generic;
@@ -17,5 +17,12 @@ namespace RestaurantAuth.Infrastructure
         }
 
         public DbSet<User> Users => Set<User>();
+        public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<RefreshToken>().ToTable("RefreshToken");
+        }
     }
 }
