@@ -15,4 +15,5 @@ public interface IUserRepository
     Task<LoginResponseDTO> LoginUser(LoginRequestDTO request);
     Task<LoginResponseDTO> RefreshToken(RefreshTokenRequestDTO request);
     Task<bool> LogoutUser(LogoutRequestDTO request);
+    Task<UserProfileResponseDTO> GetUserProfile(int userId);
 }

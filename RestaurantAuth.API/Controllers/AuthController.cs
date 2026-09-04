@@ -1,8 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantAuth.Infrastructure;
 using RestaurantAuth.Domain;
 using RestaurantAuth.Domain.DTO.User;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace RestaurantAuth.API.Controllers
 {
@@ -178,6 +181,53 @@ namespace RestaurantAuth.API.Controllers
                 });
             }
         }
+
+        [Authorize]
+        [HttpGet("Profile")]
+        public async Task<IActionResult> GetProfile()
+        {
+            try
+            {
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                    ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+
+                if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
+                {
+                    return Unauthorized(new
+                    {
+                        success = false,
+                        message = "Invalid or missing user identity in access token."
+                    });
+                }
+
+                var profile = await _userRepository.GetUserProfile(userId);
+
+                return Ok(new
+                {
+                    success = true,
+                    message = "User profile retrieved successfully.",
+                    data = profile
+                });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new
+                {
+                    success = false,
+                    message = ex.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    success = false,
+                    message = "An unexpected error occurred.",
+                    error = ex.InnerException != null ? ex.InnerException.Message : ex.Message
+                });
+            }
+        }
     }
 }
+
 

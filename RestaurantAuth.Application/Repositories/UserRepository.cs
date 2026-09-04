@@ -241,6 +241,26 @@ namespace RestaurantAuth.Application.Repositories
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<UserProfileResponseDTO> GetUserProfile(int userId)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            if (user == null)
+            {
+                throw new KeyNotFoundException($"User with ID {userId} was not found.");
+            }
+
+            return new UserProfileResponseDTO
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Email = user.Email,
+                Role = user.Role,
+                CreatedAt = user.CreatedAt,
+                IsActive = user.IsActive
+            };
+        }
     }
 }
+
 
